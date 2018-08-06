@@ -9,8 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.storage.StorageMetadata
 import android.provider.MediaStore
-
-
+import android.support.v4.app.ActivityCompat
 
 
 class MainActivity : Activity(){
@@ -19,6 +18,12 @@ class MainActivity : Activity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ,android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.SYSTEM_ALERT_WINDOW,android.Manifest.permission.CAMERA,android.Manifest.permission.WAKE_LOCK
+        ,android.Manifest.permission.BLUETOOTH,android.Manifest.permission.INTERNET
+        )
+        ActivityCompat.requestPermissions(this, permissions,0)
+
         var intent = Intent(this@MainActivity, TrackerService::class.java)
                 .setAction("enable_capture")
 
@@ -26,7 +31,7 @@ class MainActivity : Activity(){
         startService(intent)
 
 
-      finish()
 
+      finish()
     }
 }

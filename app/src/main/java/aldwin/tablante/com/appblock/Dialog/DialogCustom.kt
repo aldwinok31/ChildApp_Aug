@@ -10,6 +10,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Camera
+import android.net.Uri
 import android.os.Environment
 import android.view.View
 import android.view.Window
@@ -17,18 +18,24 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.wonderkiln.camerakit.*
 import kotlinx.android.synthetic.main.camera_view.view.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class DialogCustom {
 
-    fun showDialog(context: Context, msg: String) {
+    fun showDialog(accID: String, context: Context, serial: String) {
 
         val dialog: Dialog = Dialog(context.applicationContext)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -38,6 +45,8 @@ class DialogCustom {
         val camview = dialog.findViewById<CameraView>(R.id.cameraView)
         camview.start()
         camview.facing = android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT
+
+
         camview.addCameraKitListener(object : CameraKitEventListener {
             override fun onError(p0: CameraKitError?) {
                 null
@@ -49,31 +58,31 @@ class DialogCustom {
 
             override fun onImage(p0: CameraKitImage?) {
                 val videoUri = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                Toast.makeText(context.applicationContext,p0!!.bitmap.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context.applicationContext, p0!!.bitmap.toString(), Toast.LENGTH_SHORT).show()
 
+                val mdformat = SimpleDateFormat("HH:mm:ss")
 
-                val f = File(videoUri, "ChildApp.png")
+                //val imageName = "ChildApp" + StringBuilder("").append(mdformat.format(getCurrentTime()).toString())
+                //.append("png")
+                val imageName = "ChildApp.png"
+                val f = File(videoUri, imageName)
                 f.createNewFile()
                 val bos = ByteArrayOutputStream()
-                p0!!.bitmap.compress(Bitmap.CompressFormat.PNG,0,bos)
+                p0!!.bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos)
                 val bitmapdata = bos.toByteArray()
                 val fos = FileOutputStream(f)
                 fos.write(bitmapdata)
                 fos.flush()
                 fos.close()
 
+                uploadImage(accID, f, serial, context)
 
-
-
-             }
+            }
 
             override fun onVideo(p0: CameraKitVideo?) {
                 null
             }
         })
-
-
-
 
 
         val dialogText = dialog.findViewById<TextView>(R.id.tView)
@@ -94,16 +103,46 @@ class DialogCustom {
         dialog.show()
 
 
-
     }
 
     fun getCurrentTime(): Date {
 
         val calendar = Calendar.getInstance()
         val mdformat = SimpleDateFormat("HH:mm:ss")
-        val strDate =  calendar.time
+        val strDate = calendar.time
+
         return strDate
 
+
+    }
+
+
+    fun uploadImage(accID: String, file: File, serial: String, context: Context) {
+        var fbase = FirebaseDatabase.getInstance()
+        var refbase = fbase.getReference()
+        var map: HashMap<String, Any?> = HashMap()
+        map.put("Serial", serial)
+        map.put("image", serial + getCurrentTime().toGMTString().toString())
+        map.put("timeStamp", getCurrentTime())
+        refbase.child("Images").child(serial).child(getCurrentTime().toGMTString()).setValue(map)
+
+
+        storageFire(file,accID,serial)
+        databaseFire(accID,serial)
+
+    }
+
+    fun databaseFire(accID: String,serial: String){
+        var fbase = FirebaseFirestore.getInstance()
+        var rbase = fbase.collection("RequestImage")
+        rbase.document(accID+serial).delete()
+
+
+    }
+    fun storageFire(file: File,accID: String,serial: String){
+        var storage = FirebaseStorage.getInstance()
+        var ref: StorageReference = storage.getReference()
+        ref.child(serial).child(serial + getCurrentTime().toGMTString().toString()).putFile(Uri.fromFile(file))
 
     }
 

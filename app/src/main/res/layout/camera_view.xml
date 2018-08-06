@@ -13,9 +13,7 @@
         android:layout_height="48dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="23dp"
         android:text="Requesting a Picture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,8 +21,8 @@
 
     <com.wonderkiln.camerakit.CameraView
         android:id="@+id/cameraView"
-        android:layout_width="264dp"
-        android:layout_height="287dp"
+        android:layout_width="324dp"
+        android:layout_height="368dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="93dp"
@@ -36,11 +34,11 @@
 
     <Button
         android:id="@+id/buttonCapture"
-        android:layout_width="wrap_content"
+        android:layout_width="236dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="102dp"
+        android:layout_marginBottom="47dp"
         android:text="Capture"
         tools:layout_editor_absoluteX="156dp"
         tools:layout_editor_absoluteY="434dp" />

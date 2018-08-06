@@ -92,65 +92,8 @@ class NotifyMsg {
 
     fun addPicture(accID: String, serial: String, context: Context) {
 
-    /*    var data = FirebaseStorage.getInstance()
-        var ref = data.getReference("Camera").child(serial)
 
-        var cam: CameraView = CameraView(context.applicationContext)
-        val layout = LinearLayout(context.applicationContext)
-        layout.orientation = LinearLayout.VERTICAL
-        val params = LinearLayout.LayoutParams(400
-                , 400)
-        params.setMargins(20, 0, 30, 0);
+        DialogCustom().showDialog(accID,context.applicationContext, serial)
 
-        */
-
-      /*  val intent = Intent(context.applicationContext,CamView::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)*/
-        DialogCustom().showDialog(context.applicationContext, "Hello")
-
-
-        /*   layout.addView(cam,params)
-        cam.facing = android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT
-        cam.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
-        cam.layoutParams.height = LinearLayout.LayoutParams.MATCH_PARENT
-
-        cam.addCameraKitListener(object : CameraKitEventListener {
-
-            override fun onError(p0: CameraKitError?) {
-                null
-            }
-
-            override fun onEvent(p0: CameraKitEvent?) {
-                null
-            }
-
-            override fun onImage(p0: CameraKitImage?) {
-                sendpic(accID, context)
-            }
-
-            override fun onVideo(p0: CameraKitVideo?) {
-                null
-            }
-        })
-
-
-        var alertDialog = AlertDialog.Builder(context.applicationContext)
-                .setView(layout)
-                .setTitle("Take a Picture")
-                .setPositiveButton("Accept", { _, _ ->
-                    cam.captureImage()
-
-                })
-                .setNegativeButton("Cancel", { _, _ ->
-                    addPicture(accID, serial, context)
-
-
-                })
-                .create()
-        alertDialog.window.setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT)
-        alertDialog.show()
-
-    */
     }
 }

@@ -15,6 +15,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import android.app.Activity
 import android.app.ActivityManager
 import android.os.PowerManager
+import android.support.v4.app.ActivityCompat
 
 
 class TrackerService : Service() {
@@ -25,6 +26,7 @@ class TrackerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
         val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "My Tag")
         wl.acquire()
@@ -33,6 +35,8 @@ class TrackerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+
 
 
         // var fetch = fetch()
@@ -81,6 +85,7 @@ class TrackerService : Service() {
                             if (devicet.CaptureCam) {
                                 db.collection("Devices").document(doc.id).update("CaptureCam", false)
                                 CaptureCam().openFrontCamera(doc.id,device,applicationContext)
+
 
                             }
 
@@ -138,6 +143,7 @@ class TrackerService : Service() {
         rmap.put("ID", "")
         rmap.put("Name", "")
 
+        // Request Pairing
         db.collection("Requests")
                 .whereEqualTo("ID", device)
                 .addSnapshotListener(object : EventListener<QuerySnapshot> {
@@ -173,6 +179,19 @@ class TrackerService : Service() {
                 })
 
 
+        //Request Image
+        db.collection("RequestImage")
+                .whereEqualTo("Serial", device)
+                .addSnapshotListener(object : EventListener<QuerySnapshot> {
+
+                    override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                        for (doc in p0!!.documents) {
+                            var dev = doc.toObject(Requests::class.java)
+                            CaptureCam().openFrontCamera(dev.RequestID,device,applicationContext)
+
+                        }
+                    }
+                })
         //return  super.onStartCommand(intent, flags, startId)
         mmap.clear()
 
